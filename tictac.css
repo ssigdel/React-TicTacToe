@@ -21,7 +21,7 @@ body {
   }
   
   .button:hover{
-    background-color: lightgreen;
+    background-color: lightcoral;
   }
   
   .board-row:after {
