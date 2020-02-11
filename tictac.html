@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tictac.css">
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+    <title>Tic-Tac-Toe</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    function calculateWinner(squares){
+        const lines = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ];
+        for(let i = 0; i < lines.length; i++){
+            const [a,b,c] = lines[i];
+            if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
+                return squares[a];
+            }
+        }
+        return null;
+
+    }
+    function Square(props){
+            return(
+                <button className="square" onClick ={props.onClick}>{props.value}</button>
+            );
+        }
+    
+
+    class Board extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {squares: Array(9).fill(null), xIsNext: true};
+            
+        }
+        handleClick(i){
+            const squares = this.state.squares.slice();
+            if(calculateWinner(squares) || squares[i]){
+                return;
+            }
+            squares[i] = this.state.xIsNext ? "X": "O";
+            this.setState({squares: squares, xIsNext: !this.state.xIsNext,});
+        }
+        refreshButton(){
+            let c = 0;
+            const squares = this.state.squares.slice();
+            for(let i = 0; i < squares.length; i++){
+                if(squares[i] != null){
+                    c++;
+                }
+            }
+            if(calculateWinner(squares) || c != 0 ){
+                for(let i = 0 ; i< squares.length ; i++){
+                    squares[i] = null;
+                    this.setState({squares: squares});
+                }
+                 
+            }
+        }
+        
+        renderSquare(i){
+            return <Square value={this.state.squares[i]} onClick={()=> this.handleClick(i)}/>;
+        }
+        render(){
+            const winner = calculateWinner(this.state.squares);
+            let status;
+            if(winner){
+                status = "Winner:" + winner;
+            }
+            else{
+                status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+            }
+            
+            return (
+                <div>
+                    <div className ="status">{status}</div>
+                    <button className ="button" onClick={()=>this.refreshButton()}>Play Again</button>
+                    <div className="board-row">
+                        {this.renderSquare(0)}
+                        {this.renderSquare(1)}
+                        {this.renderSquare(2)}
+                    </div>
+                    <div className="board-row">
+                        {this.renderSquare(3)}
+                        {this.renderSquare(4)}
+                        {this.renderSquare(5)}
+                    </div>
+                    <div className="board-row">
+                        {this.renderSquare(6)}
+                        {this.renderSquare(7)}
+                        {this.renderSquare(8)}
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    class Game extends React.Component{
+        render(){
+            const header = "Tic-Tac-Toe"
+            return(
+                <div className="game">
+                <div className="heading"><h1>{header}</h1><hr/></div>
+                    <div className="game-board">
+                        <Board/>
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <Game/>,
+        document.getElementById("root")
+    );
+    </script>
+</body>
+</html>
