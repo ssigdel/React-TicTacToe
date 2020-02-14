@@ -55,14 +55,14 @@
             this.setState({squares: squares, xIsNext: !this.state.xIsNext,});
         }
         refreshButton(){
-            let c = 0;
+            let nullBoxCount = 0;
             const squares = this.state.squares.slice();
             for(let i = 0; i < squares.length; i++){
                 if(squares[i] != null){
-                    c++;
+                    nullBoxCount++;
                 }
             }
-            if(calculateWinner(squares) || c != 0 ){
+            if(calculateWinner(squares) || nullBoxCount != 0 ){
                 for(let i = 0 ; i< squares.length ; i++){
                     squares[i] = null;
                     this.setState({squares: squares});
